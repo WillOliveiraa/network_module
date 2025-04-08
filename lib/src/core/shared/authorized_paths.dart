@@ -1,1 +1,1 @@
-const authorizedPaths = ['Auth', 'Enrollment', 'ClientSupport'];
+const authorizedPaths = ['login'];

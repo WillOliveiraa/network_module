@@ -10,11 +10,11 @@ class ApiManager {
 
   ApiErrorException handleApiError(DioException err) {
     final response = err.response;
-    final data = response?.data as Map<String, dynamic>;
+    final data = response?.data;
 
     final errors =
         List.from(
-          data['errors'] ?? [],
+          data?['errors'] ?? [],
         ).map((e) => ErrorResponse(message: e)).toList();
 
     if (err.type == DioExceptionType.cancel) {
