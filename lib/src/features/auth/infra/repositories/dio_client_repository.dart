@@ -23,7 +23,7 @@ class DioClientRepository implements NetworkClientRespository {
       ..interceptors.add(DioInterceptors())
       ..options.baseUrl = FlavorConfig.instance.values.baseUrl ?? ''
       ..options.connectTimeout = Duration(milliseconds: 60000)
-      ..options.receiveTimeout = Duration(microseconds: 60000);
+      ..options.receiveTimeout = Duration(milliseconds: 60000);
 
     if (kDebugMode) {
       _dio.interceptors.add(CurlLoggerDioInterceptor(printOnSuccess: true));

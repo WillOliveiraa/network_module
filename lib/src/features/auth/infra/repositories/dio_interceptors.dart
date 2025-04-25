@@ -94,7 +94,8 @@ class DioInterceptors extends Interceptor {
       );
     }
 
-    if (err.type == DioExceptionType.connectionTimeout) {
+    if (err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.receiveTimeout) {
       errorException = ApiErrorException(
         statusCode: responseError?.statusCode ?? 999,
         url: err.requestOptions.uri.toString(),
