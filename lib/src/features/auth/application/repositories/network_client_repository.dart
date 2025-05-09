@@ -32,4 +32,9 @@ abstract class NetworkClientRespository {
     required NetworkRequestModel payload,
     CancelRequest? cancelRequest,
   });
+
+  Future<NetworkResponseModel> postFileUpload<T>({
+    required NetworkRequestModel payload,
+    CancelRequest? cancelRequest,
+  });
 }

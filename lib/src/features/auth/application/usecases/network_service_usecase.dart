@@ -35,12 +35,19 @@ class NetworkServiceUsecase {
   Future<Either<ApiErrorException, NetworkResponseModel>> postRequest({
     required NetworkRequestModel payload,
     CancelRequest? cancelRequest,
+    bool isFile = false,
   }) async {
     try {
-      final response = await _clientRepository.post(
-        payload: payload,
-        cancelRequest: cancelRequest,
-      );
+      final response =
+          isFile
+              ? await _clientRepository.postFileUpload(
+                payload: payload,
+                cancelRequest: cancelRequest,
+              )
+              : await _clientRepository.post(
+                payload: payload,
+                cancelRequest: cancelRequest,
+              );
       return Right(response);
     } on ApiErrorException catch (e) {
       return Left(e);

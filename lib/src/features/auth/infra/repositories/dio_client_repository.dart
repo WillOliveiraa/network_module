@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:core_module/core_module.dart';
 import 'package:dependencies_module/external/curl_logger_dio_interceptor.dart';
 import 'package:dependencies_module/external/dio.dart';
+import 'package:dependencies_module/external/mime.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/shared/api_manager.dart';
@@ -159,5 +162,39 @@ class DioClientRepository implements NetworkClientRespository {
       method: response.requestOptions.method.toUpperCase(),
       headers: response.data['header'],
     );
+  }
+
+  @override
+  Future<NetworkResponseModel> postFileUpload<T>({
+    required NetworkRequestModel payload,
+    CancelRequest? cancelRequest,
+  }) async {
+    try {
+      final file = payload.body?['file'] as File;
+      final fileName = file.path.split('/').last;
+      final mimeType = lookupMimeType(file.path)?.split('/');
+
+      FormData data = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+          contentType:
+              mimeType != null ? DioMediaType(mimeType[0], mimeType[1]) : null,
+        ),
+        'userId': payload.body?['userId'],
+      });
+
+      return await _dio
+          .post(
+            payload.endpoint,
+            data: data,
+            queryParameters: payload.queryParameters,
+            options: Options(headers: payload.headers),
+            cancelToken: cancelRequest?.cancelToken,
+          )
+          .then(_setDioResponse);
+    } on DioException catch (e) {
+      throw _apiManager.handleApiError(e);
+    }
   }
 }

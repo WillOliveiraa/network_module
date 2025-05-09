@@ -22,7 +22,10 @@ class DioInterceptors extends Interceptor {
     NetworkRequestModel result = NetworkRequestModel(
       method: options.method,
       endpoint: options.path,
-      body: options.data,
+      body:
+          options.data is FormData
+              ? {'file': (options.data as FormData).files.first.value.filename}
+              : options.data,
       queryParameters: options.queryParameters,
       headers: options.headers,
     );
